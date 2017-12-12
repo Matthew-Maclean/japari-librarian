@@ -119,6 +119,84 @@ impl Friend
 
         fmt
     }
+
+    /// Searches for a username mention in a source, and parses out
+    /// quoted friends
+    pub fn find(source: &str, target_user: &str) -> Option<Vec<Friend>>
+    {
+        // allowed characters in reddit usernames
+        static USERNAME_CHARS: &[char] = &[
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', '-',
+        ];
+        assert!(target_user.chars().all(|c| USERNAME_CHARS.contains(&c)),
+            "Target reddit username contained characters that are not allowed in reddit usernames");
+
+        let mut chars = source.chars();
+        while let Some(c) = chars.next()
+        {
+            if c == '/'
+            {
+                if let Some('u') = chars.next() {
+                if let Some('/') = chars.next()
+                {
+                    let mut user = String::new();
+                    while let Some(c) = chars.next()
+                    {
+                        if USERNAME_CHARS.contains(&c)
+                        {
+                            user.push(c);
+                        }
+                        else
+                        {
+                            // this loop breaks one character after the last username character.
+                            // This means that one character is lost. This is OK for reddit
+                            // username mentions, because they cannot come directly after
+                            // eachother.
+                            break;
+                        }
+                    }
+
+                    if user == target_user
+                    {
+                        let mut friends = Vec::new();
+
+                        while let Some(c) = chars.next()
+                        {
+                            if c == '"'
+                            {
+                                let mut quoted = String::new();
+                                while let Some(c) = chars.next()
+                                {
+                                    if c == '"'
+                                    {
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        quoted.push(c);
+                                    }
+                                }
+
+                                friends.push(Friend::new(&quoted, Uuid::new_v4()));
+                            }
+                            else if !c.is_whitespace()
+                            {
+                                break;
+                            }
+                        }
+
+                        return Some(friends)
+                    }
+                }}
+            }
+        }
+        
+        None
+    }
 }
 
 /// A media a friend might appear in.

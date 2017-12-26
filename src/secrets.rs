@@ -2,6 +2,7 @@ macro_rules! secret_file
 {
     ($name:ident, $path:expr, $trail:expr) =>
     {
+        #[inline(always)]
         pub fn $name() -> &'static str
         {
             let contents = include_str!($path);

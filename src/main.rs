@@ -8,6 +8,7 @@
 mod friend;
 mod page;
 mod reddit;
+mod secrets;
 
 fn main()
 {

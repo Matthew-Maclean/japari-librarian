@@ -19,8 +19,8 @@ pub struct Friend
     pub media: Media,
     /// The wiki title for this friend
     ///
-    /// The wiki formats titles titles as <name>/<media>. This field
-    /// may be updated when a request is made to the wiki.
+    /// This is a guess at what the title would be, the actual wiki title may
+    /// be different.
     pub title: String,
     /// The friend ID
     ///

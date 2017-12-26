@@ -5,6 +5,11 @@ use std::time::{Instant, Duration};
 
 use super::RedditError;
 
+/// A reddit session
+///
+/// This structure handles reddit authorization and ratelimiting.  
+/// To make sure a request will be handled properly, call
+/// `prepare` before the request, and `update` after it.
 #[derive(Debug)]
 pub struct Session
 {
@@ -22,6 +27,7 @@ pub struct Session
 
 impl Session
 {
+    /// Make a new Session
     pub fn new<S0, S1, S2, S3>(id: S0, secret: S1, user: S2, pass: S3) -> Session
         where
             S0: Into<String>,
@@ -42,11 +48,19 @@ impl Session
         }
     }
 
+    /// Get a user-agent header for requests
+    ///
+    /// Reddit will deny any request without a user-agent. It's good practice
+    /// to consolidate all the user-agents to the same one in the same place
     pub fn user_agent(&self) -> UserAgent
     {
         UserAgent::new(format!("{}/0.0.1", self.user))
     }
-
+    
+    /// Get a bearer token for reddit
+    ///
+    /// This function will re-aquire the token if it has expired, or will expire
+    /// in 90 seconds.
     pub fn bearer(&mut self, client: &Client) -> Result<Authorization<Bearer>, RedditError>
     {
         if self.token_expired()
@@ -86,6 +100,10 @@ impl Session
         }))
     }
 
+    /// Prepare for a reddit request
+    ///
+    /// This function will prepare for a reddit request, and one more
+    /// possible request to re-aquire a bearer token.
     pub fn prepare(&self)
     {
         // allow for the request and a possible re-authorization
@@ -94,7 +112,10 @@ impl Session
             self.wait_for_reset();
         }
     }
-
+    
+    /// Update ratelimit values
+    ///
+    /// Returns true if the ratelimit values were updated successfully.
     pub fn update(&mut self, headers: &Headers) -> bool
     {
         let remain = if let Some(remain) = headers.get::<XRatelimitRemaining>()

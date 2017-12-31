@@ -9,6 +9,7 @@ mod friend;
 mod page;
 mod reddit;
 mod secrets;
+mod process;
 
 fn main()
 {

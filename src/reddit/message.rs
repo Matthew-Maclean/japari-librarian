@@ -3,7 +3,7 @@ use reqwest::Client;
 use super::{RedditError, Session};
 
 /// A reddit inbox message
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq, Eq, Hash)]
 pub struct Message
 {
     /// The fullname of the message
@@ -140,6 +140,11 @@ impl Message
         {
             names.push_str(&msg.name);
             names.push(',');
+        }
+
+        if names.len() > 0
+        {
+            names.pop(); // remove trailing comma
         }
 
         session.prepare();

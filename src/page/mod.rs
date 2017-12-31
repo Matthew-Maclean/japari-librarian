@@ -10,7 +10,7 @@ use friend::Friend;
 /// A Page is usually for a friend, but actually describes many pages on the wiki.  
 /// The page is built in two requests, one to get the page title and URL. And
 /// another to get the image URL.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Page
 {
     /// The friends that this page is linked to

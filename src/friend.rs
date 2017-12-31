@@ -28,6 +28,10 @@ pub struct Friend
     /// track of which friends they contain while still allowing
     /// fields of that friend to be updated.
     pub id: Uuid,
+    // Since the actual implementation does not update any fields
+    // of the friend, the ID method is not needed anymore. However,
+    // I would prefer to get it working at all before I engage in
+    // any refactoring efforts.
 }
 
 impl Friend

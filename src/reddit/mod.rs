@@ -1,10 +1,12 @@
 pub mod session;
 pub mod message;
+pub mod reply;
 
 use reqwest::{Error, StatusCode};
 
 pub use self::session::Session;
 pub use self::message::Message;
+pub use self::reply::reply;
 
 /// An error that might occur during a reddit request
 #[derive(Debug)]

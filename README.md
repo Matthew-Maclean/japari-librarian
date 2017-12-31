@@ -19,3 +19,6 @@ and store information from a message.
 reddit bot's client ID, client secrets, and reddit username and password.
 These files are assumed to have a trailing newline, look around the
 `secrets.rs` to find out more.
+
+4. In `process.rs`, change the reference to `/u/YourGamerMom` with a reference to
+your reddit account.

@@ -33,6 +33,17 @@ image if it can find one.
 
 ---
 
+## FAQ
+
+### No one has asked you questions, how can any be "frequently asked"
+
+### Why doesn't it respond with an excerpt from the page?
+
+The Japari Library doesn't have the "Extracts" extension, and the actual wiki-text is not
+formatted consistently, so I can't reliably just grab a section from the page.
+
+---
+
 ## How to repurpose for your own uses
 
 1. Change refrences to the Japrai Library in the `page` module to a wiki

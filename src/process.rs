@@ -48,11 +48,11 @@ pub fn make_replies(messages: Vec<(Message, Vec<Uuid>)>, pages: Vec<Page>) -> Ve
             }
         }
 
-        if fmt.len() > 0
-        {
-            fmt.pop(); // remove the second to last newline
-            fmt.pop(); // remove the last newline
-        }
+        fmt.push_str(
+            "---\n\n^^I'm ^^a ^^bot ^^friend! ^^Message ^^\\/u/YourGamerMom \
+            ^^if ^^you ^^have ^^questions ^^or ^^concerns. ^^Check ^^out ^^my \
+            ^^[code](https://www.example.com), ^^and ^^my \
+            ^^[subreddit](https://www.reddit.com/r/japari_librarian)");
 
         replies.push((message.name, fmt));
     }

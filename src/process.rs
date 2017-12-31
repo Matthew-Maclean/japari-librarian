@@ -51,7 +51,8 @@ pub fn make_replies(messages: Vec<(Message, Vec<Uuid>)>, pages: Vec<Page>) -> Ve
         fmt.push_str(
             "---\n\n^^I'm ^^a ^^bot ^^friend! ^^Message ^^\\/u/YourGamerMom \
             ^^if ^^you ^^have ^^questions ^^or ^^concerns. ^^Check ^^out ^^my \
-            ^^[code](https://www.example.com), ^^and ^^my \
+            ^^[code](https://github.com/Matthew-Maclean/japari-librarian), \
+            ^^and ^^my \
             ^^[subreddit](https://www.reddit.com/r/japari_librarian)");
 
         replies.push((message.name, fmt));

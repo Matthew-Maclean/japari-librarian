@@ -35,12 +35,18 @@ image if it can find one.
 
 ## FAQ
 
-### No one has asked you questions, how can any be "frequently asked"
+### No one has asked you questions, how can any be "frequently asked"?
 
 ### Why doesn't it respond with an excerpt from the page?
 
 The Japari Library doesn't have the "Extracts" extension, and the actual wiki-text is not
 formatted consistently, so I can't reliably just grab a section from the page.
+
+### How come it sometimes pulls an image that isn't the main one, or isn't an image at all?
+
+There's no way to tell specifically which image on a page is the "main" one, so this program
+looks for images with the name of the page in their name, or the string "original". This
+doesn't always work, but it's pretty good in my testing.
 
 ---
 

@@ -6,6 +6,7 @@
              extern crate serde_json;
 #[macro_use] extern crate log;
              extern crate simplelog;
+             extern crate clap;
 
 use simplelog::*;
 
@@ -18,10 +19,47 @@ mod process;
 fn main()
 {
     use std::time::*;
+    use std::fs::OpenOptions;
 
-    SimpleLogger::init(LogLevelFilter::Info, Config::default()).unwrap();
+    let matches = clap::App::new("japari-libraria")
+        .version("0.0.1")
+        .author("Matthew Maclean")
+        .about("Reddit bot for /r/KemonoFriends")
+        .arg(clap::Arg::with_name("logfile")
+             .short("f")
+             .long("logfile")
+             .takes_value(true)
+             .value_name("LOGFILE")
+             .required(false)
+             .help("If set, the log file where info and above level logs go"))
+        .arg(clap::Arg::with_name("interval")
+             .short("i")
+             .long("interval")
+             .takes_value(true)
+             .value_name("INTERVAL")
+             .required(true)
+             .help("The interval, in seconds, to run the program loop on"))
+        .get_matches();
 
-    let interval = Duration::from_secs(60); // once a minute
+    if let Some(logfile) = matches.value_of("logfile")
+    {
+         CombinedLogger::init(vec![
+            SimpleLogger::new(LogLevelFilter::Warn, Config::default()),
+            WriteLogger::new(LogLevelFilter::Info, Config::default(), OpenOptions::new()
+                .append(true)
+                .create(true)
+                .open(logfile).unwrap()),
+        ]).unwrap();
+    }
+    else
+    {
+        SimpleLogger::init(LogLevelFilter::Info, Config::default()).unwrap();
+    }
+
+    let interval = Duration::from_secs(matches.value_of("interval")
+        .unwrap()
+        .parse::<u64>()
+        .unwrap());
 
     let client = reqwest::Client::new();
     let mut session = reddit::Session::new(
@@ -136,7 +174,7 @@ fn cycle(client: &reqwest::Client, session: &mut reddit::Session)
 
     let pages = Page::make(partials, &images, &friends);
 
-    info!("Made {} pages", pages.len());
+    info!("Made {} pages", pages.len()); // due to wiki wierdness, it always makes at least one
 
     let replies = make_replies(pairs, pages);
 

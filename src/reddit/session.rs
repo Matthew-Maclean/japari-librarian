@@ -65,6 +65,8 @@ impl Session
     {
         if self.token_expired()
         {
+            info!("Getting an authorization token");
+
             let mut res = client.post("https://www.reddit.com/api/v1/access_token")
                 .header(self.user_agent())
                 .basic_auth(self.id.clone(), Some(self.secret.clone()))
@@ -171,7 +173,10 @@ impl Session
         let now = Instant::now();
         if now < self.reset
         {
-            ::std::thread::sleep(self.reset - now);
+            let sleep = self.reset - now;
+            info!("Ratelimit sleeping for {} seconds", sleep.as_secs());
+
+            ::std::thread::sleep(sleep);
         }
     }
 }

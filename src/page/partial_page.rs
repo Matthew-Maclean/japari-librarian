@@ -143,31 +143,46 @@ impl PartialPage
 
     fn select_image(title: &str, images: &Option<Vec<Image>>) -> Option<String>
     {
+        // common image extentions
+        let exts = [
+            "jpg", "png", "jpeg",
+            "gif", "bmp", "tiff"
+        ];
+
         if let &Some(ref images) = images
         {
-            if images.len() != 0
+            let mut selected = None;
+
+            for image in images.iter()
+                .map(|image| image.title.clone()) // just the titles
+                .filter(|image| exts.iter() // only images
+                        .any(|ext| image.to_lowercase().ends_with(ext)))
             {
-                // try to find an image with "original" in it's title
-                for ref image in images
+                // initially set the selected image to the first one
+                if selected.is_none()
                 {
-                    if image.title.to_lowercase().contains("original")
-                    {
-                        return Some(image.title.clone())
-                    }
+                    selected = Some(image.clone());
                 }
-                // if none of them have "original" in their titles
-                // try to find an image with the title in it's name
-                for ref image in images
+
+                let lc = image.to_lowercase();
+                // if the title contains "original", select it and
+                // don't continue
+                if lc.contains("original")
                 {
-                    if image.title.to_lowercase().contains(&title.to_lowercase())
-                    {
-                        return Some(image.title.clone())
-                    }
+                    selected = Some(image);
+                    break;
                 }
-                // if one cannot be found using the above methods, just take the first one
-                return Some(images[0].title.clone())
+                // if the title contains the page title, select it,
+                // but continue in case another one later on is a 
+                // better matc
+                if lc.contains(&title.to_lowercase())
+                    && selected.is_none()
+                {
+                    selected = Some(image);
+                }
             }
-            
+
+            return selected;
         }
 
         None

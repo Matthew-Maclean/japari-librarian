@@ -54,6 +54,7 @@ impl PartialPage
                 ("format", "json"),
                 ("prop", "images|info"),
                 ("inprop", "url"),
+                ("imlimit", "500"),
                 ("titles", &titles),
             ]).unwrap();
 

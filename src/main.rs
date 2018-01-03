@@ -94,6 +94,11 @@ fn cycle(client: &reqwest::Client, session: &mut reddit::Session)
 
     let messages = match Message::get_unread(client, session, None)
     {
+        Ok(ref m) if m.len() == 0 =>
+        {
+            info!("No unread messages");
+            return;
+        }
         Ok(m) =>
         {
             info!("Recieved {} unread messages", m.len());
@@ -137,6 +142,12 @@ fn cycle(client: &reqwest::Client, session: &mut reddit::Session)
     }
 
     let (pairs, friends) = find_friends(messages, secrets::user());
+
+    if friends.len() == 0
+    {
+        info!("No friends found");
+        return;
+    }
 
     info!("Parsed a total {} friends", friends.len());
 

@@ -91,7 +91,10 @@ impl Page
 }
 
 /// The user-agent to use for the wiki
-pub static USER_AGENT: &'static str = "japari-librarian/0.0.1";
+pub fn user_agent() -> String
+{
+    format!("{}/{}", ::secrets::user(), ::VERSION)
+}
 /// The maximum number of titles that can be put into one wiki request
 ///
 /// The actual number is 50, but due to wiki weirdness and the high

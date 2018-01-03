@@ -52,7 +52,7 @@ impl ImageUrl
             ]).unwrap();
 
         let mut res = client.get(url)
-            .header(UserAgent::new(super::USER_AGENT))
+            .header(UserAgent::new(super::user_agent()))
             .send()?;
 
         match res.status()

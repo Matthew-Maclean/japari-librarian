@@ -54,7 +54,7 @@ impl Session
     /// to consolidate all the user-agents to the same one in the same place
     pub fn user_agent(&self) -> UserAgent
     {
-        UserAgent::new(format!("{}/0.0.1", self.user))
+        UserAgent::new(format!("{}/{}", self.user, ::VERSION))
     }
     
     /// Get a bearer token for reddit

@@ -1,6 +1,6 @@
 [package]
 name = "japari-librarian"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Matthew Maclean <myself123@live.com>"]
 
 [dependencies]

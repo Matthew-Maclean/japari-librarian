@@ -16,13 +16,15 @@ mod reddit;
 mod secrets;
 mod process;
 
+pub static VERSION: &'static str = "1.0";
+
 fn main()
 {
     use std::time::*;
     use std::fs::OpenOptions;
 
     let matches = clap::App::new("japari-libraria")
-        .version("0.0.1")
+        .version(VERSION)
         .author("Matthew Maclean")
         .about("Reddit bot for /r/KemonoFriends")
         .arg(clap::Arg::with_name("logfile")

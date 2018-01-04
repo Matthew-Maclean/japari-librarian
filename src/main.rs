@@ -146,6 +146,10 @@ fn cycle(client: &reqwest::Client, session: &mut reddit::Session)
         }
     }
 
+    let messages = filter_messages(messages);
+
+    info!("Filtered to {} messages", messages.len());
+
     let (pairs, friends) = find_friends(messages, secrets::user());
 
     if friends.len() == 0
@@ -209,4 +213,30 @@ fn cycle(client: &reqwest::Client, session: &mut reddit::Session)
                 "Other error \"{:?}\" while replying to messages", err),
         }
     };
+}
+
+fn filter_messages(messages: Vec<reddit::Message>) -> Vec<reddit::Message>
+{
+    // subreddit whitelist
+    let whitelist = &[
+        "kemonofriends",
+        "japari_librarian"
+    ];
+
+    let mut filtered = Vec::with_capacity(messages.len());
+    for msg in messages
+    {
+        // allow any private message, or any comment from the whitelisted subreddits
+        if let &Some(ref sub) = &msg.subreddit
+        {
+            if !whitelist.contains(&sub.to_lowercase().as_str())
+            {
+                continue;
+            }
+        }
+
+        filtered.push(msg);
+    }
+
+    filtered
 }

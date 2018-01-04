@@ -81,3 +81,6 @@ doesn't always work, but it's pretty good in my testing.
     With their usual meanings
 
 4. Change `MAINTAINER` in `main.rs` to your username, so people bother you rather than me.
+
+5. Change the subreddit whitelist in `filter_messages`, or change the whole function to suit
+    your needs.

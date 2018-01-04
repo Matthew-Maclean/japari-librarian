@@ -53,17 +53,31 @@ doesn't always work, but it's pretty good in my testing.
 ## How to repurpose for your own uses
 
 1. Change refrences to the Japrai Library in the `page` module to a wiki
-of your choice. The code should work with any wikimedia-powered wiki.
+    of your choice. The code should work with any wikimedia-powered wiki.
 
 2. Modify the `Friend` type to your liking. Although it is called "Friend",
-after the characters in Kemono Friends, it really just represents a way to parse
-and store information from a message.
+    after the characters in Kemono Friends, it really just represents a way to parse
+    and store information from a message.
 
-3. Create your `secrets` directory. There should be four files: `id.txt`,
-`secret.txt`, `user.txt`, and `pass.txt`. These respectivley contain your
-reddit bot's client ID, client secrets, and reddit username and password.
-These files are assumed to have a trailing newline, look around the
-`secrets.rs` to find out more.
+3. Fix your `secrets` module. The `secrets` module has four files that it loads
+    from, but as long as the four functions are present with the right signature,
+    everything should work. If you keep the file loading method, you need these four
+    files in the same directory as `src` (but not in `src`):
 
-4. In `process.rs`, change the reference to `/u/YourGamerMom` with a reference to
-your reddit account.
+    - `.secrets/id.txt`: Contains the reddit bot client ID.
+    - `.secrets/secret.txt`: Contains the reddit bot client secret.
+    - `.secrets/user.txt`: The reddit account username that the bot will use.
+    - `.secrets/pass.txt`: The reddit account password that the bot will use.
+
+    All of these files are assumed to have a trailing newline. The `$trail` argument
+    decides how many character from the end to strip. If you don't want to use a
+    `.secrets` folder, just make sure these functions are present:
+
+    - `fn id() -> &'static str`
+    - `fn secret() -> &'static str`
+    - `fn user() -> &'static str`
+    - `fn pass() -> &'static str`
+
+    With their usual meanings
+
+4. Change `MAINTAINER` in `main.rs` to your username, so people bother you rather than me.

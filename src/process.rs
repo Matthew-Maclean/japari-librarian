@@ -48,12 +48,15 @@ pub fn make_replies(messages: Vec<(Message, Vec<Uuid>)>, pages: Vec<Page>) -> Ve
             }
         }
 
-        fmt.push_str(
-            "---\n\n^^I'm ^^a ^^bot ^^friend! ^^Message ^^\\/u/YourGamerMom \
-            ^^if ^^you ^^have ^^questions ^^or ^^concerns. ^^Check ^^out ^^my \
-            ^^[code](https://github.com/Matthew-Maclean/japari-librarian), \
-            ^^and ^^my \
-            ^^[subreddit](https://www.reddit.com/r/japari_librarian)");
+        fmt.push_str(&format!("---\n\n\
+            ^^I'm ^^a ^^bot ^^friend! ^^Contact ^^\\/u/{maintainer} \
+            ^^if ^^you ^^have ^^any ^^questions ^^or ^^concerns. \
+            ^^View ^^my ^^[code]({code}), ^^and ^^my \
+            ^^[subreddit]({subreddit}). ^^Version ^^{version}.",
+            maintainer = ::MAINTAINER,
+            code = "https://github.com/Matthew-Maclean/japari-librarian",
+            subreddit = "https://www.reddit.com/r/japari_librarian/",
+            version = ::VERSION));
 
         replies.push((message.name, fmt));
     }

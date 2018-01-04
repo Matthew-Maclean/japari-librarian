@@ -16,7 +16,10 @@ mod reddit;
 mod secrets;
 mod process;
 
+/// The current version
 pub static VERSION: &'static str = "1.0";
+/// The maintainer username
+pub static MAINTAINER: &'static str = "YourGamerMom";
 
 fn main()
 {

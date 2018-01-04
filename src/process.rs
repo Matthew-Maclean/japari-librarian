@@ -48,6 +48,11 @@ pub fn make_replies(messages: Vec<(Message, Vec<Uuid>)>, pages: Vec<Page>) -> Ve
             }
         }
 
+        if fmt.len() == 0
+        {
+            continue;
+        }
+
         fmt.push_str(&format!("---\n\n\
             ^^I'm ^^a ^^bot ^^friend! ^^Contact ^^\\/u/{maintainer} \
             ^^if ^^you ^^have ^^any ^^questions ^^or ^^concerns. \

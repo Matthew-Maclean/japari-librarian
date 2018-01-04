@@ -114,6 +114,12 @@ impl Friend
                     }
                 }
             }
+            // ' isn't alphabetic, but we still shoudn't capitalize characters directly
+            // after it, like in "Rothschild's Giraffe".
+            else if c == '\''
+            {
+                fmt.push(c);
+            }
             else
             {
                 first_letter = true;

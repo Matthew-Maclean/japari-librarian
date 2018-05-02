@@ -31,6 +31,22 @@ backslash. The known medias are:
 It will respond (if it can parse the friend, and find the page) with a library link, and an
 image if it can find one.
 
+## How to use it
+
+Japari Librarian runs on a loop, checking reddit and processing/responding to messages every
+interval. It logs to stdout, and optionally logs redirects "info" and below level log messages
+to a log file. Start it like this:
+
+    japari-librarian -i<Interval> [-f<LogFile>]
+
+For example, to loop once a minute, and log to a file called `log.txt`:
+
+    japari-librarian -i 60 -f log.txt
+
+Or to loop once every 30 seconds, and log everything to stdout:
+
+    japari-librarian -i 30
+
 ---
 
 ## FAQ

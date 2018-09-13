@@ -94,11 +94,11 @@ impl PartialPage
         let mut partials = Vec::new();
         for (_, page) in query.pages.drain()
         {
-            match PartialPage::parse_page(page, &normalized)
+            if let Some(partial) = PartialPage::parse_page(page, &normalized)
             {
-                Some(partial) => partials.push(partial),
-                None => {}, // maybe log it?
+                partials.push(partial);
             }
+            // otherwise maybe log it?
         }
         partials
     }
@@ -119,20 +119,20 @@ impl PartialPage
 
             Some(PartialPage
             {
-                title: title,
-                aliases: aliases,
-                url: url,
-                image_title: image_title,
+                title,
+                aliases,
+                url,
+                image_title,
             })
         }
     }
 
     fn get_aliases(title: &str, normalized: &Option<Vec<Normalized>>) -> Vec<String>
     {
-        if let &Some(ref normalized) = normalized
+        if let Some(ref normalized) = normalized
         {
             normalized.iter()
-                .filter(|n| &n.to == title)
+                .filter(|n| n.to == title)
                 .map(|n| n.from.clone())
                 .collect::<Vec<_>>()
         }
@@ -150,7 +150,7 @@ impl PartialPage
             "gif", "bmp", "tiff"
         ];
 
-        if let &Some(ref images) = images
+        if let Some(ref images) = images
         {
             let mut selected = None;
 

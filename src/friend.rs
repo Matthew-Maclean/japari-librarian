@@ -51,7 +51,7 @@ impl Friend
                 name: name.clone(),
                 media: Media::None,
                 title: name,
-                id: id,
+                id,
             }
         }
         // This is called premature optimization
@@ -82,10 +82,10 @@ impl Friend
 
         Friend
         {
-            name: name,
-            media: media,
-            title: title,
-            id: id,
+            name,
+            media,
+            title,
+            id,
         }
     }
 
@@ -246,16 +246,16 @@ impl Media
     }
     
     /// Format the media into it's wiki suffix (includes the slash)
-    pub fn wiki_suffix(&self) -> &'static str
+    pub fn wiki_suffix(self) -> &'static str
     {
         match self
         {
-            &Media::None => "",
-            &Media::Anime => "/Anime",
-            &Media::Manga => "/Manga",
-            &Media::Nexon => "/Nexon Game",
-            &Media::Stage => "/Stage Play",
-            &Media::Pavilion => "/Pavilion",
+            Media::None => "",
+            Media::Anime => "/Anime",
+            Media::Manga => "/Manga",
+            Media::Nexon => "/Nexon Game",
+            Media::Stage => "/Stage Play",
+            Media::Pavilion => "/Pavilion",
         }
     }
 }

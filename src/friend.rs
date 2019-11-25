@@ -217,16 +217,23 @@ pub enum Media
 {
     /// No media specified, or the media could not be parsed
     None,
-    /// The 2017 anime (and any future series in that continuity)
+    /// The 2017 anime (just season one)
     Anime,
+    /// The 2019 second season of the anime
+    Season2,
     /// All manga adaptations
     Manga,
+    /// The 2018 game Kemono Friends Festival
+    Festival,
+    /// The pavilion game
+    Pavilion,
+    /// The 2019 game Kemono Friends 3 (probably both the phone and arcade version)
+    KF3,
     /// The nexon game
     Nexon,
     /// All stage adaptations
     Stage,
-    /// The upcoming pavilion game
-    Pavilion,
+    
 }
 
 impl Media
@@ -236,12 +243,15 @@ impl Media
     {
         match source.as_ref().trim().to_lowercase().as_str()
         {
-            "anime" => Media::Anime,
-            "manga" => Media::Manga,
-            "nexon" | "nexon game" => Media::Nexon,
-            "stage" | "stage play" => Media::Stage,
-            "pavilion" => Media::Pavilion,
-            _ => Media::None,
+            "anime" | "season 1"=>        Media::Anime,
+            "season 2" =>                 Media::Season2,
+            "manga" =>                    Media::Manga,
+            "festival" =>                 Media::Festival,
+            "pavilion" =>                 Media::Pavilion,
+            "kf3" | "kemono friends 3" => Media::KF3,
+            "nexon" | "nexon game" =>     Media::Nexon,
+            "stage" | "stage play" =>     Media::Stage,
+            _ =>                          Media::None,
         }
     }
     
@@ -252,10 +262,13 @@ impl Media
         {
             Media::None => "",
             Media::Anime => "/Anime",
+            Media::Season2 => "/Season_2",
             Media::Manga => "/Manga",
+            Media::Festival => "/Festival",
+            Media::Pavilion => "/Pavilion",
+            Media::KF3 => "/KF3",
             Media::Nexon => "/Nexon Game",
             Media::Stage => "/Stage Play",
-            Media::Pavilion => "/Pavilion",
         }
     }
 }

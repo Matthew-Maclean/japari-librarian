@@ -144,6 +144,23 @@ impl PartialPage
 
     fn select_image(title: &str, images: &Option<Vec<Image>>) -> Option<String>
     {
+        //take just the name as the title, no media
+        let title = 
+        {
+            let mut t = String::new();
+
+            for c in title.chars()
+            {
+                if c == '/'
+                {
+                    break;
+                }
+                t.push(c);
+            }
+
+            t
+        };
+
         // common image extentions
         let exts = [
             "jpg", "png", "jpeg",
@@ -175,9 +192,8 @@ impl PartialPage
                 }
                 // if the title contains the page title, select it,
                 // but continue in case another one later on is a 
-                // better matc
+                // better match
                 if lc.contains(&title.to_lowercase())
-                    && selected.is_none()
                 {
                     selected = Some(image);
                 }

@@ -22,11 +22,14 @@ The `friend` will be formatted to capitalize the first letter of every word, and
 will be matched against a known set of media unless the first character in the quotes is a
 backslash. The known medias are:
 
-- The 2017 anime "anime"  
-- Either manga series "manga"  
+- The 2017 anime "anime" or "season 1"  
+- The 2019 anime season 2 "season 2"  
+- Either manga series "manga" 
+- Kemono Friends Festival "festival"
+- Kemono Friends Pavilion "pavilion"
+- Kemono Friends 3 (either phone or arcade) "kf3"
 - The original Nexon game "nexon game" or "nexon"  
 - Any of the stage performances "stage play" or "stage"  
-- The upcoming Pavilion game "pavilion"
 
 It will respond (if it can parse the friend, and find the page) with a library link, and an
 image if it can find one.

@@ -1,4 +1,4 @@
-use reqwest::Client;
+use reqwest::blocking::Client;
 
 use friend::Friend;
 use super::WikiError;
@@ -44,7 +44,7 @@ impl PartialPage
         assert!(friends.len() <= super::MAX_TITLES);
 
         use reqwest::{Url, StatusCode};
-        use reqwest::header::UserAgent;
+        use reqwest::header::USER_AGENT;
 
         let titles = PartialPage::make_titles(&friends);
 
@@ -58,13 +58,13 @@ impl PartialPage
                 ("titles", &titles),
             ]).unwrap();
 
-        let mut res = client.get(url)
-            .header(UserAgent::new(super::user_agent()))
+        let res = client.get(url)
+            .header(USER_AGENT, super::user_agent())
             .send()?;
 
         match res.status()
         {
-            StatusCode::Ok => Ok(PartialPage::parse_response(res.json()?)),
+            StatusCode::OK => Ok(PartialPage::parse_response(res.json()?)),
             code => Err(WikiError::StatusError(code))
         }
     }
@@ -145,7 +145,7 @@ impl PartialPage
     fn select_image(title: &str, images: &Option<Vec<Image>>) -> Option<String>
     {
         //take just the name as the title, no media
-        let title = 
+        let title =
         {
             let mut t = String::new();
 
@@ -191,7 +191,7 @@ impl PartialPage
                     break;
                 }
                 // if the title contains the page title, select it,
-                // but continue in case another one later on is a 
+                // but continue in case another one later on is a
                 // better match
                 if lc.contains(&title.to_lowercase())
                 {

@@ -1,6 +1,6 @@
              extern crate uuid;
              extern crate reqwest;
-#[macro_use] extern crate hyper;
+             extern crate hyper;
              extern crate serde;
 #[macro_use] extern crate serde_derive;
              extern crate serde_json;
@@ -66,7 +66,7 @@ fn main()
         .parse::<u64>()
         .unwrap());
 
-    let client = reqwest::Client::new();
+    let client = reqwest::blocking::Client::new();
     let mut session = reddit::Session::new(
         secrets::id(),
         secrets::secret(),
@@ -91,7 +91,7 @@ fn main()
 }
 
 // Todo: replace unrwaps with something more graceful
-fn cycle(client: &reqwest::Client, session: &mut reddit::Session)
+fn cycle(client: &reqwest::blocking::Client, session: &mut reddit::Session)
 {
     use reddit::*;
     use process::*;

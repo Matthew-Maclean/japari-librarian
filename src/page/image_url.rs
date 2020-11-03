@@ -1,4 +1,5 @@
-use reqwest::Client;
+use reqwest::blocking::Client;
+use reqwest::header::USER_AGENT;
 
 use super::WikiError;
 use super::partial_page::PartialPage;
@@ -38,7 +39,6 @@ impl ImageUrl
         assert!(partials.len() <= super::MAX_TITLES);
 
         use reqwest::{Url, StatusCode};
-        use reqwest::header::UserAgent;
 
         let titles = ImageUrl::make_titles(partials);
 
@@ -51,13 +51,13 @@ impl ImageUrl
                 ("titles", &titles)
             ]).unwrap();
 
-        let mut res = client.get(url)
-            .header(UserAgent::new(super::user_agent()))
+        let res = client.get(url)
+            .header(USER_AGENT, super::user_agent())
             .send()?;
 
         match res.status()
         {
-            StatusCode::Ok => ImageUrl::parse_response(res.json()?),
+            StatusCode::OK => ImageUrl::parse_response(res.json()?),
             code => Err(WikiError::StatusError(code)),
         }
     }

@@ -1,5 +1,6 @@
-use reqwest::{Client, StatusCode};
-use reqwest::header::{Authorization, UserAgent, Bearer, Headers};
+use reqwest::{blocking::Client, StatusCode};
+use reqwest::header::{HeaderName, HeaderValue, HeaderMap};
+use reqwest::header::USER_AGENT;
 
 use std::time::{Instant, Duration};
 
@@ -7,7 +8,7 @@ use super::RedditError;
 
 /// A reddit session
 ///
-/// This structure handles reddit authorization and ratelimiting.  
+/// This structure handles reddit authorization and ratelimiting.
 /// To make sure a request will be handled properly, call
 /// `prepare` before the request, and `update` after it.
 #[derive(Debug)]
@@ -52,23 +53,23 @@ impl Session
     ///
     /// Reddit will deny any request without a user-agent. It's good practice
     /// to consolidate all the user-agents to the same one in the same place
-    pub fn user_agent(&self) -> UserAgent
+    pub fn user_agent(&self) -> HeaderValue
     {
-        UserAgent::new(format!("{}/{}", self.user, ::VERSION))
+        HeaderValue::from_str(&format!("{}/{}", self.user, ::VERSION)).unwrap()
     }
-    
+
     /// Get a bearer token for reddit
     ///
     /// This function will re-aquire the token if it has expired, or will expire
     /// in 90 seconds.
-    pub fn bearer(&mut self, client: &Client) -> Result<Authorization<Bearer>, RedditError>
+    pub fn bearer(&mut self, client: &Client) -> Result<String, RedditError>
     {
         if self.token_expired()
         {
             info!("Getting an authorization token");
 
-            let mut res = client.post("https://www.reddit.com/api/v1/access_token")
-                .header(self.user_agent())
+            let res = client.post("https://www.reddit.com/api/v1/access_token")
+                .header(USER_AGENT, self.user_agent())
                 .basic_auth(self.id.clone(), Some(self.secret.clone()))
                 .body(format!(
                     "grant_type=password\
@@ -82,7 +83,7 @@ impl Session
 
             match res.status()
             {
-                StatusCode::Ok => match res.json::<LoginResponse>()
+                StatusCode::OK => match res.json::<LoginResponse>()
                 {
                     Ok(json) =>
                     {
@@ -91,15 +92,12 @@ impl Session
                     },
                     Err(_) => return Err(RedditError::BadCredentials)
                 },
-                StatusCode::Unauthorized => return Err(RedditError::Unauthorized),
+                StatusCode::UNAUTHORIZED => return Err(RedditError::Unauthorized),
                 code => return Err(RedditError::OtherStatus(code))
             }
         }
 
-        Ok(Authorization(Bearer
-        {
-            token: self.token.clone().unwrap()
-        }))
+        Ok(self.token.clone().unwrap())
     }
 
     /// Prepare for a reddit request
@@ -114,17 +112,28 @@ impl Session
             self.wait_for_reset();
         }
     }
-    
+
     /// Update ratelimit values
     ///
     /// Returns true if the ratelimit values were updated successfully.
-    pub fn update(&mut self, headers: &Headers) -> bool
+    pub fn update(&mut self, headers: &HeaderMap) -> bool
     {
-        let remain = if let Some(remain) = headers.get::<XRatelimitRemaining>()
+        let rate_remain_header = HeaderName::from_static(
+            X_RATELIMIT_REMAINING);
+        let rate_reset_header = HeaderName::from_static(
+            X_RATELIMIT_RESET);
+        let remain = if let Some(remain) = headers.get(rate_remain_header)
         {
-            if let Ok(remain) = remain.parse::<f64>() // why is this a float?
+            if let Ok(remain) = remain.to_str()
             {
-                remain as u32
+                if let Ok(remain) = remain.parse::<f64>() // why is this a float?
+                {
+                    remain as u32
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
@@ -136,11 +145,18 @@ impl Session
             return false;
         };
 
-        let reset = if let Some(reset) = headers.get::<XRatelimitReset>()
+        let reset = if let Some(reset) = headers.get(rate_reset_header)
         {
-            if let Ok(reset) = reset.parse::<u64>()
+            if let Ok(reset) = reset.to_str()
             {
-                Instant::now() + Duration::from_secs(reset)
+                if let Ok(reset) = reset.parse::<u64>()
+                {
+                    Instant::now() + Duration::from_secs(reset)
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
@@ -181,8 +197,8 @@ impl Session
     }
 }
 
-header!{ (XRatelimitRemaining, "x-ratelimit-remaining") => [String] }
-header!{ (XRatelimitReset,     "x-ratelimit-reset"    ) => [String] }
+const X_RATELIMIT_REMAINING: &'static str = "x-ratelimit-remaining";
+const X_RATELIMIT_RESET: &'static str     = "x-ratelimit-reset";
 
 #[derive(Deserialize)]
 struct LoginResponse

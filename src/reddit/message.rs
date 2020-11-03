@@ -1,4 +1,5 @@
-use reqwest::Client;
+use reqwest::blocking::Client;
+use reqwest::header::USER_AGENT;
 
 use super::{RedditError, Session};
 
@@ -52,19 +53,19 @@ impl Message
                     &[("limit", &limit.to_string())]).unwrap()
             };
 
-            let mut res = client.get(url)
-                .header(session.user_agent())
-                .header(session.bearer(client)?)
+            let res = client.get(url)
+                .header(USER_AGENT, session.user_agent())
+                .bearer_auth(session.bearer(client)?)
                 .send()?;
 
             use reqwest::StatusCode;
 
             match res.status()
             {
-                StatusCode::Ok => Ok(res.json::<MessageResponse>()?.data.children.into_iter()
+                StatusCode::OK => Ok(res.json::<MessageResponse>()?.data.children.into_iter()
                     .map(|x| x.data)
                     .collect::<Vec<_>>()),
-                StatusCode::Unauthorized => Err(RedditError::Unauthorized),
+                StatusCode::UNAUTHORIZED => Err(RedditError::Unauthorized),
                 code => Err(RedditError::OtherStatus(code))
             }
         }
@@ -150,8 +151,8 @@ impl Message
         session.prepare();
 
         let res = client.post("https://oauth.reddit.com/api/read_message")
-            .header(session.user_agent())
-            .header(session.bearer(client)?)
+            .header(USER_AGENT, session.user_agent())
+            .bearer_auth(session.bearer(client)?)
             .body(format!("id={}", names))
             .send()?;
 
@@ -159,8 +160,8 @@ impl Message
 
         match res.status()
         {
-            StatusCode::Ok => Ok(()),
-            StatusCode::Unauthorized => Err(RedditError::Unauthorized),
+            StatusCode::OK => Ok(()),
+            StatusCode::UNAUTHORIZED=> Err(RedditError::Unauthorized),
             code => Err(RedditError::OtherStatus(code))
         }
     }

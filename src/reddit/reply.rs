@@ -1,4 +1,5 @@
-use reqwest::Client;
+use reqwest::blocking::Client;
+use reqwest::header::USER_AGENT;
 
 use super::RedditError;
 use super::Session;
@@ -11,8 +12,8 @@ pub fn reply(client: &Client, session: &mut Session, replies: Vec<(String, Strin
         session.prepare();
 
         let res = client.post("https://oauth.reddit.com/api/comment")
-            .header(session.user_agent())
-            .header(session.bearer(client)?)
+            .header(USER_AGENT, session.user_agent())
+            .bearer_auth(session.bearer(client)?)
             .body(format!(
                 "parent={name}\
                 &text={body}",

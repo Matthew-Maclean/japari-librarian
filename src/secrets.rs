@@ -16,3 +16,4 @@ secret_file!(id,     "../.secrets/id.txt",     1); // client ID
 secret_file!(secret, "../.secrets/secret.txt", 1); // client secret
 secret_file!(user,   "../.secrets/user.txt",   1); // account username
 secret_file!(pass,   "../.secrets/pass.txt",   1); // account password
+secret_file!(maintainer, "../.secrets/maintainer.txt", 1); // maintainer

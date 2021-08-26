@@ -1,5 +1,6 @@
 use uuid::Uuid;
 
+use secrets::maintainer;
 use reddit::Message;
 use friend::Friend;
 use page::Page;
@@ -58,7 +59,7 @@ pub fn make_replies(messages: Vec<(Message, Vec<Uuid>)>, pages: Vec<Page>) -> Ve
             ^^if ^^you ^^have ^^any ^^questions ^^or ^^concerns. \
             ^^View ^^my ^^[code]({code}), ^^and ^^my \
             ^^[subreddit]({subreddit}). ^^Version ^^{version}.",
-            maintainer = ::MAINTAINER,
+            maintainer = maintainer(),
             code = "https://github.com/Matthew-Maclean/japari-librarian",
             subreddit = "https://www.reddit.com/r/japari_librarian/",
             version = ::VERSION));

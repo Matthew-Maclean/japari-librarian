@@ -22,14 +22,14 @@ The `friend` will be formatted to capitalize the first letter of every word, and
 will be matched against a known set of media unless the first character in the quotes is a
 backslash. The known medias are:
 
-- The 2017 anime "anime" or "season 1"  
-- The 2019 anime season 2 "season 2"  
-- Either manga series "manga" 
+- The 2017 anime "anime" or "season 1"
+- The 2019 anime season 2 "season 2"
+- Either manga series "manga"
 - Kemono Friends Festival "festival"
 - Kemono Friends Pavilion "pavilion"
 - Kemono Friends 3 (either phone or arcade) "kf3"
-- The original Nexon game "nexon game" or "nexon"  
-- Any of the stage performances "stage play" or "stage"  
+- The original Nexon game "nexon game" or "nexon"
+- Any of the stage performances "stage play" or "stage"
 
 It will respond (if it can parse the friend, and find the page) with a library link, and an
 image if it can find one.
@@ -87,6 +87,7 @@ doesn't always work, but it's pretty good in my testing.
     - `.secrets/secret.txt`: Contains the reddit bot client secret.
     - `.secrets/user.txt`: The reddit account username that the bot will use.
     - `.secrets/pass.txt`: The reddit account password that the bot will use.
+    - `.secrets/maintainer.txt`: The reddit username of the maintainer
 
     All of these files are assumed to have a trailing newline. The `$trail` argument
     decides how many character from the end to strip. If you don't want to use a
@@ -96,10 +97,9 @@ doesn't always work, but it's pretty good in my testing.
     - `fn secret() -> &'static str`
     - `fn user() -> &'static str`
     - `fn pass() -> &'static str`
+    - `fn maintainer() -> &'static str`
 
     With their usual meanings
 
-4. Change `MAINTAINER` in `main.rs` to your username, so people bother you rather than me.
-
-5. Change the subreddit whitelist in `filter_messages`, or change the whole function to suit
+4. Change the subreddit whitelist in `filter_messages`, or change the whole function to suit
     your needs.
